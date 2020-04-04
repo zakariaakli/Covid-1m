@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Blank Template",
+    "name": "Covid-1m",
     "slug": "Corona1M",
     "privacy": "public",
     "sdkVersion": "36.0.0",
@@ -11,7 +11,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -24,7 +24,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.C1M.Covid-1m",
+      "buildNumber": "1.0.0", 
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.C1M.Covid-1m",
+      "versionCode": 1
     }
   }
 }

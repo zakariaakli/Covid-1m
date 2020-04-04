@@ -14,14 +14,15 @@ export default class App extends React.Component {
 }
 
 const AppNavigator = createStackNavigator({
-  ContaminationRisk: {
+  Covid1m: {
     screen: contaminationYesInfo
   },
-  About: {
+  Details: {
     screen: contaminationYesDetails
+    
   }
   },{
-    initialRouteName: "ContaminationRisk"
+    initialRouteName: "Covid1m"
 });
 
 const AppContainer = createAppContainer(AppNavigator);

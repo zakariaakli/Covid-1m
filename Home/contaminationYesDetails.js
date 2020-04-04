@@ -56,27 +56,36 @@ export class contaminationYesDetails extends React.Component{
                />
              </View>
                </View>
+               {this.state.switchValue &&
                <View>
-                 <Text style={styles.textInfos}>
-                 Your positiv to Covid-19. You have still 2 days to change it to Negativ.
-                 </Text>
-                 <Text style={styles.textInfos}>
-                 Attention, you need to do some tests before changing your status.
-                 </Text>
-                 
-               </View>
-               <View style={styles.imageStyle}>
-                <Image  source={require('./../assets/QrCode.png')} />
-               </View>
+               <Text style={styles.textInfos}>
+               You are positive to Covid-19. You still have 2 days to change it to Negative.
+               </Text>
+               <Text style={styles.textInfos}>
+               Attention: you need to get tested before changing your status.
+               </Text>
+               
+             </View>
+               }
+               {!this.state.switchValue &&
                <View>
-                 <Text style={styles.textInfos}>
-                 Your positiv to Covid-19. You have still 2 days to change it to Negativ.
-                 </Text>
-                 <Text style={styles.textInfos}>
-                 Attention, you need to do some tests before changing your status.
-                 </Text>
-                 
+                  <View style={styles.imageStyle}>
+               <Image  source={require('./../assets/QrCode.png')} />
+              </View>
+              <View>
+                <Text style={styles.textInfos}>
+                If you go to the hospital, show this QR Code to hospital staff. 
+                They will use it to set your test result.
+                </Text>
+                <Text style={styles.textInfos}>
+                if you made an autoTest, and you got a positive result, set the info to YES.
+                </Text>
+                
                </View>
+               </View>
+               
+               }
+               
           
          </ScrollView>
        </SafeAreaView>
