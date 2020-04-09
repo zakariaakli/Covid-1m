@@ -1,28 +1,83 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, SafeAreaView,ScrollView, Button, Switch } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, SafeAreaView,ScrollView, Button, NativeModules, NativeEventEmitter, Alert } from 'react-native';
 import { Search } from './search.js';
 import { Divider } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
+import BleManager from 'react-native-ble-manager';
+import NotificationService from '../Tools/notifications.js';
+const BleManagerModule = NativeModules.BleManager;
+const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 
 export class contaminationYesInfo extends React.Component{
- 
-   //Initial state false for the switch. You can change it to true just to see.
-   state = {switchValue:false}
-   toggleSwitch = (value) => {
-       //onValueChange of the switch this function will be called
-       this.setState({switchValue: value})
-       //state changes according to switch
-       //which will result in re-render the text
+  
+  constructor(props){
+    super(props);
+    this.notification = new NotificationService(this.onNotification);
+    this.devices = [];
+    this.state = {
+        dataSource: this.devices
+    };
+}
+    //Gets called when the notification comes in
+    onNotification = (notif) => {
+      Alert.alert(notif.title, notif.message);
     }
+
+       //Permissions to use notifications
+       handlePerm(perms) {
+        Alert.alert("Permissions", JSON.stringify(perms));
+      }
+
+  componentDidMount() { 
+    this.interval = setInterval(() => this.startScanning(), 100000);
     
+    bleManagerEmitter.addListener('BleManagerDiscoverPeripheral',(data) => 
+    {
+        let device = 'device found ziko: ' + data.name + '(' + data.id + ')'; 
+        
+        this.devices.indexOf(device) === -1 ? this.devices.push(device) : console.log('element deja existant');
+        
+        let newState = this.state;
+        newState.dataSource = this.devices;
+        this.setState(newState);
+        
+    });
+    
+    BleManager.start({showAlert: false})
+    .then(() => {
+    // Success code
+    console.log('Module initialized by zak');
+});
+}
+
+componentWillUnmount() {
+  clearInterval(this.interval);
+}
+
+startScanning() {
+  //this.notification.localNotification();
+  console.log('start scanning');
+  //BleManager.checkState();
+  BleManager.scan([], 120).then((data)=>{
+   console.log('---------------------------scan started');
+   console.log(this.state.dataSource);
+   console.log('---------------------------taille')
+   console.log(this.state.dataSource.length);
+   console.log('---------------------------scan finished');
+  
+  })
+}
+
+
   render(){
-    
+    //test
     return (
       <View style={{ flex: 1 }}>
         <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.container}>
         <Search/>
+        <Button onPress={() => this.startScanning()} title="Start scanning"/>
         <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={{ flex: 1 }}
             style={styles.scrollView}>
         <View style={styles.viewInfos}>
@@ -36,12 +91,13 @@ export class contaminationYesInfo extends React.Component{
           </View>
           <Divider style={styles.divider} />
           <View style={styles.viewInfos}>
-            <Text style={styles.textTitle}>Can i prevent contaminations ?</Text>
+            <Text style={styles.textTitle}>Can i prevent contamination ?</Text>
             </View>
         </ScrollView>
         <Button
           title="Change your Covid19 status"
-          onPress={() => this.props.navigation.navigate('Details')}/>       
+          onPress={() => this.props.navigation.navigate('Details')}/>   
+              
       </SafeAreaView>
       </View>
     );
