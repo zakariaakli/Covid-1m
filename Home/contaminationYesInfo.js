@@ -36,7 +36,7 @@ export class contaminationYesInfo extends React.Component{
           </View>
           <Divider style={styles.divider} />
           <View style={styles.viewInfos}>
-            <Text style={styles.textTitle}>Can i prevent contamination ?</Text>
+            <Text style={styles.textTitle}>Can i prevent contaminations ?</Text>
             </View>
         </ScrollView>
         <Button
