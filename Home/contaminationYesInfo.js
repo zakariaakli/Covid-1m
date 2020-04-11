@@ -5,12 +5,28 @@ import { Divider } from 'react-native-elements';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import BleManager from 'react-native-ble-manager';
 import NotificationService from '../Tools/notifications.js';
+import BackgroundTask from 'react-native-background-task'
+import queueFactory from 'react-native-queue';
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
+  BackgroundTask.define(() => {
+    queue = await queueFactory();
+
+    // Register job worker
+    queue.addWorker('pre-fetch-image', async (id, payload) => {
+
+      console.log('-------------Hello from a background task')
+      //this.startScanning();
+      console.log('-------------by from a background task')
+
+    });
+    await queue.start(25000); 
+    BackgroundTask.finish()
+  })
 
 export class contaminationYesInfo extends React.Component{
-  
+
   constructor(props){
     super(props);
     this.notification = new NotificationService(this.onNotification);
@@ -19,17 +35,12 @@ export class contaminationYesInfo extends React.Component{
         dataSource: this.devices
     };
 }
-    //Gets called when the notification comes in
-    onNotification = (notif) => {
-      Alert.alert(notif.title, notif.message);
-    }
 
-       //Permissions to use notifications
-       handlePerm(perms) {
-        Alert.alert("Permissions", JSON.stringify(perms));
-      }
 
   componentDidMount() { 
+    BackgroundTask.schedule({
+      period: 900, // Aim to run every 30 mins - more conservative on battery
+    });
     this.interval = setInterval(() => this.startScanning(), 100000);
     
     bleManagerEmitter.addListener('BleManagerDiscoverPeripheral',(data) => 
@@ -54,14 +65,21 @@ export class contaminationYesInfo extends React.Component{
 componentWillUnmount() {
   clearInterval(this.interval);
 }
+//Gets called when the notification comes in
+onNotification = (notif) => {
+  Alert.alert(notif.title, notif.message);
+}
 
+  //Permissions to use notifications
+  handlePerm(perms) {
+  Alert.alert("Permissions", JSON.stringify(perms));
+}
 startScanning() {
   //this.notification.localNotification();
   console.log('start scanning');
   //BleManager.checkState();
   BleManager.scan([], 120).then((data)=>{
    console.log('---------------------------scan started');
-   console.log(this.state.dataSource);
    console.log('---------------------------taille')
    console.log(this.state.dataSource.length);
    console.log('---------------------------scan finished');
