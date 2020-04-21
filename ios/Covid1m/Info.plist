@@ -52,7 +52,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow Covid-1m to access your microphone</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Allow Covid-1m to access your device's accelerometer</string>
+	<string>Allow Covid-1m to access your device&apos;s accelerometer</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give Covid-1m periences permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -71,6 +71,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Accès BLE</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

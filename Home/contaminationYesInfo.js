@@ -34,7 +34,7 @@ export class contaminationYesInfo extends React.Component{
     
     bleManagerEmitter.addListener('BleManagerDiscoverPeripheral',(data) => 
     {
-        let device = 'device found ziko: ' + data.name + '(' + data.id + ')'; 
+        let device = 'device found ziko: ' + data.name + '(' + data.id + ')' + '....' + JSON.stringify(data.advertising);
         
         this.devices.indexOf(device) === -1 ? this.devices.push(device) : console.log('element deja existant');
         
@@ -73,14 +73,14 @@ startScanning() {
   render(){
     //test
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, position:"relative" }}>
         <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.container}>
         <Search/>
         <Button onPress={() => this.startScanning()} title="Start scanning"/>
-        <ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={{ flex: 1 }}
+        <ScrollView style={styles.scrollViewStyle}
             style={styles.scrollView}>
-        <View style={styles.viewInfos}>
+            <View style={styles.viewInfos}>
             <Text style={styles.textTitle}>What is contamination risk ?</Text>
             <Text style={styles.textInfos}>On the basis of the people crossed and the places visited, H calculates a percentage of risk of contamination. You will receive a notification when this percentage is important. Don't worry, H is here to warn you. Try to go to the nearest hospital for screening.</Text>
           </View>
@@ -93,7 +93,12 @@ startScanning() {
           <View style={styles.viewInfos}>
             <Text style={styles.textTitle}>Can i prevent contamination ?</Text>
             </View>
+
+            { this.state.dataSource.map((item, key)=>(
+         <Text key={key}> { item } </Text>)
+         )}
         </ScrollView>
+       
         <Button
           title="Change your Covid19 status"
           onPress={() => this.props.navigation.navigate('Details')}/>   
@@ -137,7 +142,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center"
-  }
+  }, 
+  scrollViewStyle: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 60
+}
 
   // engine: {
   //   position: 'absolute',
